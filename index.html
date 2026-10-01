@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- Official Cross-Browser Driver Library Hook -->
-    <script src="https://unpkg.com" type="text/javascript"></script>
-    
+    <!-- Native Premium Theme Stylesheet -->
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -20,6 +18,7 @@
             --accent-color: #00d2ff;
             --text-main: #f4f4f7;
             --text-muted: #9ca3af;
+            --success-color: #10b981;
         }
 
         * {
@@ -107,38 +106,19 @@
             margin-top: 2px;
         }
 
-        /* Enforced button style overrides to ensure ScanApp loads interface layouts cleanly */
-        button, #reader button {
-            background-color: var(--accent-color) !important;
-            color: #0d0f14 !important;
-            font-size: 12px !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1px !important;
-            padding: 12px 20px !important;
-            border: none !important;
-            border-radius: 8px !important;
-            cursor: pointer !important;
-            margin: 8px auto !important;
-            display: block !important;
-        }
-
-        #reader select {
-            width: 100%;
-            background-color: var(--bg-color) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 8px !important;
-            padding: 10px !important;
-            color: #ffffff !important;
-            margin: 8px 0 !important;
+        button {
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .btn-secondary {
-            background-color: #272b35 !important;
-            color: #ffffff !important;
-            border: 1px solid #4b5563 !important;
-            padding: 10px 16px !important;
-            font-size: 12px !important;
+            background-color: #272b35;
+            color: #ffffff;
+            border: 1px solid #4b5563;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
         }
 
         .panel-title {
@@ -150,11 +130,40 @@
             margin-bottom: 12px;
         }
 
-        #reader {
-            border: 1px solid var(--border-color) !important;
-            border-radius: 12px !important;
-            background-color: #000000 !important;
-            padding: 12px !important;
+        .scanner-box {
+            background-color: #000000;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .hidden-cam-input {
+            display: none;
+        }
+
+        .cam-trigger-label {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: #0d0f14;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
+            text-align: center;
+        }
+
+        #scannerFeedback {
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 12px;
         }
 
         .form-group {
@@ -200,15 +209,17 @@
 
         .btn-primary {
             width: 100%;
-            background-color: #10b981 !important;
-            color: #ffffff !important;
-            font-size: 13px !important;
-            font-weight: 800 !important;
-            padding: 14px !important;
+            background-color: var(--success-color);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            margin-top: 8px !important;
-            border: none !important;
-            border-radius: 8px !important;
+            margin-top: 8px;
         }
 
         footer {
@@ -260,19 +271,25 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Official ScanApp Viewport Interface Box -->
+        <!-- 100% Native Web-Standard Scanner Box -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            <div id="reader"></div>
+            <div class="scanner-box">
+                <label for="nativeCamInput" class="cam-trigger-label">
+                    📸 Scan QR Code / Badge
+                </label>
+                <input type="file" accept="image/*" capture="environment" id="nativeCamInput" class="hidden-cam-input" onchange="processBadgePhoto(event)">
+                <div id="scannerFeedback">Ready. Tap button to snap a photo or select an image file.</div>
+            </div>
         </div>
 
-        <!-- Collection Form -->
+        <!-- Data Entry Form -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Waiting for live QR/Barcode match...">
+                <input type="text" id="formBarcode" placeholder="Data will auto-populate after scanning">
             </div>
 
             <div class="form-row form-group">
@@ -308,7 +325,7 @@
 
             <div class="form-group">
                 <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
+                <textarea id="formNotes" rows="3" placeholder="Note custom mixes, configurations, pricing requests..."></textarea>
             </div>
 
             <button type="submit" class="btn-primary">Save Lead Record</button>
@@ -316,4 +333,3 @@
     </main>
 
     <footer>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>🪄</span><span>Advisor</span></a>
