@@ -8,9 +8,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
-
-    <!-- Official Driver Script Hook -->
-    <script src="https://unpkg.com" type="text/javascript"></script>
     
     <style>
         :root {
@@ -20,6 +17,7 @@
             --accent-color: #00d2ff;
             --text-main: #f4f4f7;
             --text-muted: #9ca3af;
+            --success-color: #10b981;
         }
 
         * {
@@ -137,6 +135,9 @@
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .btn-action {
@@ -150,7 +151,6 @@
             border: none;
             border-radius: 6px;
             letter-spacing: 1px;
-            margin-bottom: 8px;
         }
 
         .select-input {
@@ -162,16 +162,41 @@
             border-radius: 6px;
             font-size: 12px;
             outline: none;
-            margin-top: 4px;
         }
 
-        #videoViewport {
+        .video-container {
+            position: relative;
             background-color: #000;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             overflow: hidden;
             width: 100%;
-            min-height: 200px;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scan-laser {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-color);
+            animation: scanning 2s linear infinite;
+        }
+
+        @keyframes scanning {
+            0% { top: 10%; }
+            50% { top: 90%; }
+            100% { top: 10%; }
         }
 
         #scannerFeedback {
@@ -225,7 +250,7 @@
 
         .btn-primary {
             width: 100%;
-            background-color: #10b981;
+            background-color: var(--success-color);
             color: #ffffff;
             font-size: 13px;
             font-weight: 800;
@@ -278,7 +303,7 @@
     </header>
 
     <main>
-        <!-- Real-Time Metrics -->
+        <!-- Counter Dashboard Panel -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -287,53 +312,32 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Universal Scanner with Selector Controls -->
+        <!-- 100% Native Scanner Component -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
             
-            <!-- Camera Selection Dashboard Block -->
             <div class="cam-config-box">
-                <button type="button" class="btn-action" onclick="requestPermissionsAndLoadHardware()">
-                    🔓 Grant Camera Permissions
+                <button type="button" class="btn-action" onclick="startNativeCameraPermissions()">
+                    🔓 Activate Camera Lens
                 </button>
                 <div>
-                    <label for="cameraSelector">Select Active Hardware Lens</label>
-                    <select id="cameraSelector" class="select-input" onchange="switchCameraLens(this.value)">
-                        <option value="">-- No Permissions Active --</option>
+                    <label for="cameraSelector">Select Video Input device</label>
+                    <select id="cameraSelector" class="select-input" onchange="changeActiveLens(this.value)">
+                        <option value="">-- Click Activate Button First --</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Viewport Feed Frame Box -->
-            <div id="videoViewport"></div>
-            <div id="scannerFeedback">Camera tracker standing by. Tap permissions button above.</div>
+            <div class="video-container">
+                <div class="scan-laser" id="laser" style="display:none;"></div>
+                <video id="webcamPreview" autoplay playsinline muted></video>
+            </div>
+            <div id="scannerFeedback">System standing by. Enable camera access.</div>
         </div>
 
-        <!-- Data Entry Form Component -->
+        <!-- Lead Collection Form -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Waiting for scanner tracking token...">
-            </div>
-
-            <div class="form-row form-group">
-                <div>
-                    <label>Full Name *</label>
-                    <input type="text" id="formName" required>
-                </div>
-                <div>
-                    <label>Company *</label>
-                    <input type="text" id="formCompany" required>
-                </div>
-            </div>
-
-            <div class="form-row form-group">
-                <div>
-                    <label>Email Address</label>
-                    <input type="email" id="formEmail">
-                </div>
-                <div>
-
-                    
