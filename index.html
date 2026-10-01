@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
     <!-- Official Driver Script Hook -->
-    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://unpkg.com" type="text/javascript"></script>
     
     <style>
         :root {
@@ -107,6 +107,11 @@
             margin-top: 2px;
         }
 
+        button {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
         .btn-secondary {
             background-color: #272b35;
             color: #ffffff;
@@ -115,8 +120,6 @@
             border-radius: 8px;
             font-size: 12px;
             font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
         .panel-title {
@@ -128,37 +131,55 @@
             margin-bottom: 12px;
         }
 
-        #reader {
-            border: 1px solid var(--border-color) !important;
-            border-radius: 12px !important;
-            background-color: #000000 !important;
-            padding: 12px !important;
+        .cam-config-box {
+            background: #0d0f14;
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
         }
 
-        /* Overriding target camera button rules for cross-device support */
-        #reader button {
-            background-color: var(--accent-color) !important;
-            color: #0d0f14 !important;
-            font-size: 11px !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1px !important;
-            padding: 10px 16px !important;
-            border: none !important;
-            border-radius: 6px !important;
-            cursor: pointer !important;
-            margin: 6px auto !important;
-            display: block !important;
-        }
-
-        #reader select {
+        .btn-action {
             width: 100%;
-            background-color: var(--bg-color) !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 8px !important;
-            padding: 10px !important;
-            color: #ffffff !important;
-            margin: 6px 0 !important;
+            background-color: var(--accent-color);
+            color: #0d0f14;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 11px;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .select-input {
+            width: 100%;
+            background-color: #161920;
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            outline: none;
+            margin-top: 4px;
+        }
+
+        #videoViewport {
+            background-color: #000;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            width: 100%;
+            min-height: 200px;
+        }
+
+        #scannerFeedback {
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 8px;
         }
 
         .form-group {
@@ -213,7 +234,6 @@
             padding: 14px;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
             margin-top: 8px;
         }
@@ -264,14 +284,29 @@
                 <div class="counter-label">Leads Saved</div>
                 <div id="leadCount" class="counter-value">0</div>
             </div>
-            <!-- Trigger button fixed explicitly via type attribute constraint rules -->
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Universal Scanner Framework -->
+        <!-- Universal Scanner with Selector Controls -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            <div id="reader"></div>
+            
+            <!-- Camera Selection Dashboard Block -->
+            <div class="cam-config-box">
+                <button type="button" class="btn-action" onclick="requestPermissionsAndLoadHardware()">
+                    🔓 Grant Camera Permissions
+                </button>
+                <div>
+                    <label for="cameraSelector">Select Active Hardware Lens</label>
+                    <select id="cameraSelector" class="select-input" onchange="switchCameraLens(this.value)">
+                        <option value="">-- No Permissions Active --</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Viewport Feed Frame Box -->
+            <div id="videoViewport"></div>
+            <div id="scannerFeedback">Camera tracker standing by. Tap permissions button above.</div>
         </div>
 
         <!-- Data Entry Form Component -->
@@ -280,7 +315,7 @@
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Waiting for barcode scanner check...">
+                <input type="text" id="formBarcode" placeholder="Waiting for scanner tracking token...">
             </div>
 
             <div class="form-row form-group">
@@ -300,27 +335,5 @@
                     <input type="email" id="formEmail">
                 </div>
                 <div>
-                    <label>Phone Number</label>
-                    <input type="tel" id="formPhone">
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label>Interest Level</label>
-                <select id="formInterest">
-                    <option value="Hot 🔥">Hot 🔥 (Ready to buy)</option>
-                    <option value="Medium ⚡">Medium ⚡ (Interested)</option>
-                    <option value="Cold ❄️">Cold ❄️ (General inquiry)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-primary">Save Lead Record</button>
-        </form>
-    </main>
-
-    <footer>
+                    
