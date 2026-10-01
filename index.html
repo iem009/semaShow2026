@@ -9,8 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- Embedded High-Performance QR Decoding Script Component -->
+    <!-- Embedded Core Script Engines -->
     <script src="https://jsdelivr.net"></script>
+    <script src="https://cloudflare.com"></script>
 
     <style>
         :root {
@@ -67,7 +68,7 @@
             margin-top: 4px;
         }
 
-        main {
+        #appMainArea {
             flex: 1;
             padding: 16px;
             max-width: 440px;
@@ -77,6 +78,7 @@
             flex-direction: column;
             gap: 16px;
             padding-bottom: 110px;
+            background-color: var(--bg-color);
         }
 
         .panel {
@@ -208,7 +210,8 @@
             font-family: monospace;
             font-weight: bold;
         }
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwndigEuj-6un5e_J00FJOceNqXSxt_Dn58BjxEeQ6h-AnrLGHnc8b2-9jZg_BtRj2r/exec";        .btn-primary {
+
+        .btn-primary {
             width: 100%;
             background-color: var(--success-color);
             color: #ffffff;
@@ -262,8 +265,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwndigEuj-6un
         <p>hydrabond.com • SEMA Show 2026</p>
     </header>
 
-    <main>
-        <!-- Real-Time Database Metrics Summary Panel -->
+    <div id="appMainArea">
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -272,7 +274,6 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwndigEuj-6un
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Safe, Hardware-Optimized Native Scanner Box -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
             <div class="scanner-box">
@@ -284,8 +285,7 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwndigEuj-6un
             </div>
         </div>
 
-        <!-- Data Storage Entry Form -->
-        <form id="leadForm" class="panel" onsubmit="saveLead(event)">
+        <form id="leadForm" class="panel" onsubmit="captureAndSaveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
@@ -326,3 +326,6 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwndigEuj-6un
 
             <div class="form-group">
                 <label>Booth Notes</label>
+                <textarea id="formNotes" rows="3" placeholder="Note custom requests, volume inquiries..."></textarea>
+            </div>
+
