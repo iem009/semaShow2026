@@ -9,6 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
+    <!-- Official ScanApp HTML5-QRCode Driver Script -->
+    <script src="https://unpkg.com" type="text/javascript"></script>
+    
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -104,16 +107,38 @@
             margin-top: 2px;
         }
 
-        .btn-secondary {
-            background-color: #272b35;
-            color: #ffffff;
-            border: 1px solid #4b5563;
-            padding: 10px 16px;
+        /* Styling buttons from ScanApp */
+        button, #reader button {
+            background-color: var(--accent-color) !important;
+            color: #0d0f14 !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            padding: 12px 20px !important;
+            border: none !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            margin: 8px auto !important;
+            display: block !important;
+        }
+
+        #reader select {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 10px;
+            color: #ffffff;
+            margin: 8px 0;
+        }
+
+        .btn-secondary {
+            background-color: #272b35 !important;
+            color: #ffffff !important;
+            border: 1px solid #4b5563 !important;
+            padding: 10px 16px !important;
+            font-size: 12px !important;
         }
 
         .panel-title {
@@ -125,41 +150,11 @@
             margin-bottom: 12px;
         }
 
-        .scanner-box {
-            background-color: #000000;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            text-align: center;
-        }
-
-        /* Native Hidden Hardware File input tracker wrapper */
-        .hidden-cam-input {
-            display: none;
-        }
-
-        .cam-trigger-label {
-            display: inline-block;
-            width: 100%;
-            background-color: var(--accent-color);
-            color: #0d0f14;
-            font-size: 13px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
-            text-align: center;
-        }
-
-        #scannerFeedback {
-            font-size: 11px;
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            margin-top: 10px;
+        #reader {
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+            background-color: #000000 !important;
+            padding: 12px !important;
         }
 
         .form-group {
@@ -205,18 +200,11 @@
 
         .btn-primary {
             width: 100%;
-            background-color: #10b981;
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            padding: 14px !important;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            margin-top: 8px;
+            margin-top: 8px !important;
         }
 
         footer {
@@ -268,26 +256,19 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- 100% Fail-Proof Native Camera Module -->
+        <!-- Target ScanApp Container -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            <div class="scanner-box">
-                <!-- Native device integration hook -->
-                <label for="nativeCamInput" class="cam-trigger-label">
-                    📸 Launch Device Camera
-                </label>
-                <input type="file" accept="image/*" capture="environment" id="nativeCamInput" class="hidden-cam-input" onchange="processBadgeImage(event)">
-                <div id="scannerFeedback">Ready to scan. Tap button above to snap badge photo.</div>
-            </div>
+            <div id="reader"></div>
         </div>
 
-        <!-- Lead Collection Fields -->
+        <!-- Form Fields -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Data auto-populates here after snapshot">
+                <input type="text" id="formBarcode" placeholder="Waiting for scanner match...">
             </div>
 
             <div class="form-row form-group">
@@ -323,7 +304,7 @@
 
             <div class="form-group">
                 <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
+                <textarea id="formNotes" rows="3" placeholder="Note mix requests, volume configurations..."></textarea>
             </div>
 
             <button type="submit" class="btn-primary">Save Lead Record</button>
@@ -331,3 +312,12 @@
     </main>
 
     <footer>
+        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>🪄</span><span>Advisor</span></a>
+        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>📦</span><span>Wizard</span></a>
+        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>📊</span><span>VOC Charts</span></a>
+    </footer>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "";
+        let leads = [];
+
