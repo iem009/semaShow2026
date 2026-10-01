@@ -9,7 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- Native Premium Theme Stylesheet -->
+    <!-- Embedded High-Performance QR Decoding Script Component -->
+    <script src="https://jsdelivr.net"></script>
+
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -262,7 +264,7 @@
     </header>
 
     <main>
-        <!-- Metrics Counter Block -->
+        <!-- Real-Time Database Metrics Summary Panel -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -271,7 +273,7 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- 100% Native Web-Standard Scanner Box -->
+        <!-- Safe, Hardware-Optimized Native Scanner Box -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
             <div class="scanner-box">
@@ -279,17 +281,17 @@
                     📸 Scan QR Code / Badge
                 </label>
                 <input type="file" accept="image/*" capture="environment" id="nativeCamInput" class="hidden-cam-input" onchange="processBadgePhoto(event)">
-                <div id="scannerFeedback">Ready. Tap button to snap a photo or select an image file.</div>
+                <div id="scannerFeedback">Ready. Click button to photograph Ignacio's badge.</div>
             </div>
         </div>
 
-        <!-- Data Entry Form -->
+        <!-- Data Storage Entry Form -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Data will auto-populate after scanning">
+                <input type="text" id="formBarcode" placeholder="Data auto-populates after scanning">
             </div>
 
             <div class="form-row form-group">
@@ -325,11 +327,3 @@
 
             <div class="form-group">
                 <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note custom mixes, configurations, pricing requests..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-primary">Save Lead Record</button>
-        </form>
-    </main>
-
-    <footer>
