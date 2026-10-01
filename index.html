@@ -8,6 +8,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
+
+    <!-- Official Cross-Browser Driver Library Hook -->
+    <script src="https://unpkg.com" type="text/javascript"></script>
     
     <style>
         :root {
@@ -17,7 +20,6 @@
             --accent-color: #00d2ff;
             --text-main: #f4f4f7;
             --text-muted: #9ca3af;
-            --success-color: #10b981;
         }
 
         * {
@@ -105,19 +107,38 @@
             margin-top: 2px;
         }
 
-        button {
-            cursor: pointer;
-            transition: all 0.2s;
+        /* Enforced button style overrides to ensure ScanApp loads interface layouts cleanly */
+        button, #reader button {
+            background-color: var(--accent-color) !important;
+            color: #0d0f14 !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            padding: 12px 20px !important;
+            border: none !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            margin: 8px auto !important;
+            display: block !important;
+        }
+
+        #reader select {
+            width: 100%;
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            padding: 10px !important;
+            color: #ffffff !important;
+            margin: 8px 0 !important;
         }
 
         .btn-secondary {
-            background-color: #272b35;
-            color: #ffffff;
-            border: 1px solid #4b5563;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
+            background-color: #272b35 !important;
+            color: #ffffff !important;
+            border: 1px solid #4b5563 !important;
+            padding: 10px 16px !important;
+            font-size: 12px !important;
         }
 
         .panel-title {
@@ -129,82 +150,11 @@
             margin-bottom: 12px;
         }
 
-        .cam-config-box {
-            background: #0d0f14;
-            border: 1px dashed var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .btn-action {
-            width: 100%;
-            background-color: var(--accent-color);
-            color: #0d0f14;
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 11px;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            letter-spacing: 1px;
-        }
-
-        .select-input {
-            width: 100%;
-            background-color: #161920;
-            border: 1px solid var(--border-color);
-            color: #fff;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            outline: none;
-        }
-
-        .video-container {
-            position: relative;
-            background-color: #000;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            width: 100%;
-            aspect-ratio: 4/3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .scan-laser {
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--accent-color);
-            box-shadow: 0 0 8px var(--accent-color);
-            animation: scanning 2s linear infinite;
-        }
-
-        @keyframes scanning {
-            0% { top: 10%; }
-            50% { top: 90%; }
-            100% { top: 10%; }
-        }
-
-        #scannerFeedback {
-            font-size: 11px;
-            text-align: center;
-            color: var(--text-muted);
-            font-style: italic;
-            margin-top: 8px;
+        #reader {
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px !important;
+            background-color: #000000 !important;
+            padding: 12px !important;
         }
 
         .form-group {
@@ -250,17 +200,15 @@
 
         .btn-primary {
             width: 100%;
-            background-color: var(--success-color);
-            color: #ffffff;
-            font-size: 13px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+            font-size: 13px !important;
+            font-weight: 800 !important;
+            padding: 14px !important;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            margin-top: 8px;
+            margin-top: 8px !important;
+            border: none !important;
+            border-radius: 8px !important;
         }
 
         footer {
@@ -303,7 +251,7 @@
     </header>
 
     <main>
-        <!-- Counter Dashboard Panel -->
+        <!-- Metrics Counter Block -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -312,32 +260,60 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- 100% Native Scanner Component -->
+        <!-- Official ScanApp Viewport Interface Box -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            
-            <div class="cam-config-box">
-                <button type="button" class="btn-action" onclick="startNativeCameraPermissions()">
-                    🔓 Activate Camera Lens
-                </button>
-                <div>
-                    <label for="cameraSelector">Select Video Input device</label>
-                    <select id="cameraSelector" class="select-input" onchange="changeActiveLens(this.value)">
-                        <option value="">-- Click Activate Button First --</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="video-container">
-                <div class="scan-laser" id="laser" style="display:none;"></div>
-                <video id="webcamPreview" autoplay playsinline muted></video>
-            </div>
-            <div id="scannerFeedback">System standing by. Enable camera access.</div>
+            <div id="reader"></div>
         </div>
 
-        <!-- Lead Collection Form -->
+        <!-- Collection Form -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
+                <input type="text" id="formBarcode" placeholder="Waiting for live QR/Barcode match...">
+            </div>
+
+            <div class="form-row form-group">
+                <div>
+                    <label>Full Name *</label>
+                    <input type="text" id="formName" required>
+                </div>
+                <div>
+                    <label>Company *</label>
+                    <input type="text" id="formCompany" required>
+                </div>
+            </div>
+
+            <div class="form-row form-group">
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="formEmail">
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="tel" id="formPhone">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Interest Level</label>
+                <select id="formInterest">
+                    <option value="Hot 🔥">Hot 🔥 (Ready to buy)</option>
+                    <option value="Medium ⚡">Medium ⚡ (Interested)</option>
+                    <option value="Cold ❄️">Cold ❄️ (General inquiry)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Booth Notes</label>
+                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">Save Lead Record</button>
+        </form>
+    </main>
+
+    <footer>
+        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>🪄</span><span>Advisor</span></a>
