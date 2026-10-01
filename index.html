@@ -9,9 +9,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- HTML5-QRCode Scanner Library CDN Component -->
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -128,17 +125,33 @@
             margin-bottom: 12px;
         }
 
-        #reader {
+        .scanner-box {
             background-color: #000000;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            overflow: hidden;
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Native Hidden Hardware File input tracker wrapper */
+        .hidden-cam-input {
+            display: none;
+        }
+
+        .cam-trigger-label {
+            display: inline-block;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: #0d0f14;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
+            text-align: center;
         }
 
         #scannerFeedback {
@@ -146,7 +159,7 @@
             text-align: center;
             color: var(--text-muted);
             font-style: italic;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .form-group {
@@ -178,7 +191,6 @@
             font-size: 14px;
             color: #ffffff;
             outline: none;
-            transition: border-color 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -193,8 +205,8 @@
 
         .btn-primary {
             width: 100%;
-            background-color: var(--accent-color);
-            color: #0d0f14;
+            background-color: #10b981;
+            color: #ffffff;
             font-size: 13px;
             font-weight: 800;
             text-transform: uppercase;
@@ -203,13 +215,8 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
-            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
             margin-top: 8px;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.99);
         }
 
         footer {
@@ -235,18 +242,12 @@
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             padding: 10px 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 2px;
-        }
-
-        .footer-link:active {
-            color: #ffffff;
-            border-color: var(--accent-color);
         }
     </style>
 </head>
@@ -258,6 +259,7 @@
     </header>
 
     <main>
+        <!-- Real-Time Metrics -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -266,23 +268,26 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Corrected Unified Scanner Box -->
+        <!-- 100% Fail-Proof Native Camera Module -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            <div id="reader">
-                <button type="button" id="startCamBtn" onclick="initUnifiedCamera()" class="btn-primary" style="margin: 0; width: 100%;">
-                    🔓 Activate Booth Camera
-                </button>
+            <div class="scanner-box">
+                <!-- Native device integration hook -->
+                <label for="nativeCamInput" class="cam-trigger-label">
+                    📸 Launch Device Camera
+                </label>
+                <input type="file" accept="image/*" capture="environment" id="nativeCamInput" class="hidden-cam-input" onchange="processBadgeImage(event)">
+                <div id="scannerFeedback">Ready to scan. Tap button above to snap badge photo.</div>
             </div>
-            <div id="scannerFeedback">Camera tracker standby. Tap activation button.</div>
         </div>
 
+        <!-- Lead Collection Fields -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
-                <label>Scanned Badge ID / Barcode</label>
-                <input type="text" id="formBarcode" placeholder="Scan barcode or type manually">
+                <label>Scanned Badge ID / Barcode Data</label>
+                <input type="text" id="formBarcode" placeholder="Data auto-populates here after snapshot">
             </div>
 
             <div class="form-row form-group">
@@ -318,7 +323,7 @@
 
             <div class="form-group">
                 <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note mix requests, volume pricing inquiries, etc..."></textarea>
+                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
             </div>
 
             <button type="submit" class="btn-primary">Save Lead Record</button>
@@ -326,6 +331,3 @@
     </main>
 
     <footer>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link">
-            <span>🪄</span><span>Advisor</span>
-        </a>
