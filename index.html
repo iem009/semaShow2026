@@ -9,8 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- Official ScanApp HTML5-QRCode Driver Script -->
-    <script src="https://unpkg.com" type="text/javascript"></script>
+    <!-- Official Driver Script Hook -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     
     <style>
         :root {
@@ -107,38 +107,16 @@
             margin-top: 2px;
         }
 
-        /* Styling buttons from ScanApp */
-        button, #reader button {
-            background-color: var(--accent-color) !important;
-            color: #0d0f14 !important;
-            font-size: 12px !important;
-            font-weight: 800 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 1px !important;
-            padding: 12px 20px !important;
-            border: none !important;
-            border-radius: 8px !important;
-            cursor: pointer !important;
-            margin: 8px auto !important;
-            display: block !important;
-        }
-
-        #reader select {
-            width: 100%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 10px;
-            color: #ffffff;
-            margin: 8px 0;
-        }
-
         .btn-secondary {
-            background-color: #272b35 !important;
-            color: #ffffff !important;
-            border: 1px solid #4b5563 !important;
-            padding: 10px 16px !important;
-            font-size: 12px !important;
+            background-color: #272b35;
+            color: #ffffff;
+            border: 1px solid #4b5563;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .panel-title {
@@ -155,6 +133,32 @@
             border-radius: 12px !important;
             background-color: #000000 !important;
             padding: 12px !important;
+        }
+
+        /* Overriding target camera button rules for cross-device support */
+        #reader button {
+            background-color: var(--accent-color) !important;
+            color: #0d0f14 !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1px !important;
+            padding: 10px 16px !important;
+            border: none !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            margin: 6px auto !important;
+            display: block !important;
+        }
+
+        #reader select {
+            width: 100%;
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 8px !important;
+            padding: 10px !important;
+            color: #ffffff !important;
+            margin: 6px 0 !important;
         }
 
         .form-group {
@@ -200,11 +204,18 @@
 
         .btn-primary {
             width: 100%;
-            background-color: #10b981 !important;
-            color: #ffffff !important;
-            padding: 14px !important;
+            background-color: #10b981;
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            margin-top: 8px !important;
+            margin-top: 8px;
         }
 
         footer {
@@ -253,22 +264,23 @@
                 <div class="counter-label">Leads Saved</div>
                 <div id="leadCount" class="counter-value">0</div>
             </div>
+            <!-- Trigger button fixed explicitly via type attribute constraint rules -->
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Target ScanApp Container -->
+        <!-- Universal Scanner Framework -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
             <div id="reader"></div>
         </div>
 
-        <!-- Form Fields -->
+        <!-- Data Entry Form Component -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
             <div class="form-group">
                 <label>Scanned Badge ID / Barcode Data</label>
-                <input type="text" id="formBarcode" placeholder="Waiting for scanner match...">
+                <input type="text" id="formBarcode" placeholder="Waiting for barcode scanner check...">
             </div>
 
             <div class="form-row form-group">
@@ -304,7 +316,7 @@
 
             <div class="form-group">
                 <label>Booth Notes</label>
-                <textarea id="formNotes" rows="3" placeholder="Note mix requests, volume configurations..."></textarea>
+                <textarea id="formNotes" rows="3" placeholder="Note mix requests, pricing inquiries..."></textarea>
             </div>
 
             <button type="submit" class="btn-primary">Save Lead Record</button>
@@ -312,12 +324,3 @@
     </main>
 
     <footer>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>🪄</span><span>Advisor</span></a>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>📦</span><span>Wizard</span></a>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link"><span>📊</span><span>VOC Charts</span></a>
-    </footer>
-
-    <script>
-        const GOOGLE_SCRIPT_URL = "";
-        let leads = [];
-
