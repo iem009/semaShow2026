@@ -9,8 +9,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- HTML5-QRCode Scanner Library CDN -->
-    <script src="https://unpkg.com"></script>
+    <!-- HTML5-QRCode Scanner Library CDN Component -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
     
     <style>
         :root {
@@ -133,19 +133,12 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             overflow: hidden;
-            min-height: 200px;
+            min-height: 220px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 12px;
-        }
-
-        .camera-controls {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
         }
 
         #scannerFeedback {
@@ -265,7 +258,6 @@
     </header>
 
     <main>
-        <!-- Counter Status -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -274,20 +266,17 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Camera Section with Manual Permission Request Fix -->
+        <!-- Corrected Unified Scanner Box -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
             <div id="reader">
-                <div class="camera-controls" id="initControls">
-                    <button type="button" onclick="requestDeviceCamera()" class="btn-primary" style="margin-top:0;">
-                        🔓 Activate Booth Camera
-                    </button>
-                </div>
+                <button type="button" id="startCamBtn" onclick="initUnifiedCamera()" class="btn-primary" style="margin: 0; width: 100%;">
+                    🔓 Activate Booth Camera
+                </button>
             </div>
-            <div id="scannerFeedback">Camera tracking offline. Tap button to launch hardware.</div>
+            <div id="scannerFeedback">Camera tracker standby. Tap activation button.</div>
         </div>
 
-        <!-- Submission Form Layout -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
@@ -332,3 +321,11 @@
                 <textarea id="formNotes" rows="3" placeholder="Note mix requests, volume pricing inquiries, etc..."></textarea>
             </div>
 
+            <button type="submit" class="btn-primary">Save Lead Record</button>
+        </form>
+    </main>
+
+    <footer>
+        <a href="https://hydrabond.com" target="_blank" class="footer-link">
+            <span>🪄</span><span>Advisor</span>
+        </a>
