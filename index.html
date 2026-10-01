@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HydraBOND SEMA 2026 Lead Capture</title>
     
-    <!-- iOS Native App Web View Mode Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- HTML5-QRCode Badge Scanner Library Script Link -->
+    <!-- HTML5-QRCode Scanner Library CDN -->
     <script src="https://unpkg.com"></script>
     
-    <!-- EMBEDDED HIGH-TECH CUSTOM NATIVE CSS STYLING SHEET -->
     <style>
         :root {
             --bg-color: #0d0f14;
@@ -135,6 +133,19 @@
             border-radius: 8px;
             border: 1px solid var(--border-color);
             overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .camera-controls {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         #scannerFeedback {
@@ -254,7 +265,7 @@
     </header>
 
     <main>
-        <!-- Metrics Counter Block -->
+        <!-- Counter Status -->
         <div class="panel counter-row">
             <div>
                 <div class="counter-label">Leads Saved</div>
@@ -263,14 +274,20 @@
             <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Camera Scanner Component Frame -->
+        <!-- Camera Section with Manual Permission Request Fix -->
         <div class="panel">
             <div class="panel-title">📷 Badge Scanner</div>
-            <div id="reader"></div>
-            <div id="scannerFeedback">Initializing mobile camera tracking...</div>
+            <div id="reader">
+                <div class="camera-controls" id="initControls">
+                    <button type="button" onclick="requestDeviceCamera()" class="btn-primary" style="margin-top:0;">
+                        🔓 Activate Booth Camera
+                    </button>
+                </div>
+            </div>
+            <div id="scannerFeedback">Camera tracking offline. Tap button to launch hardware.</div>
         </div>
 
-        <!-- Capture Submission Form Component -->
+        <!-- Submission Form Layout -->
         <form id="leadForm" class="panel" onsubmit="saveLead(event)">
             <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
@@ -315,16 +332,3 @@
                 <textarea id="formNotes" rows="3" placeholder="Note mix requests, volume pricing inquiries, etc..."></textarea>
             </div>
 
-            <button type="submit" class="btn-primary">Save Lead Record</button>
-        </form>
-    </main>
-
-    <!-- Bottom Quick Navigation Links System -->
-    <footer>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link">
-            <span>🪄</span><span>Advisor</span>
-        </a>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link">
-            <span>📦</span><span>Wizard</span>
-        </a>
-        <a href="https://hydrabond.com" target="_blank" class="footer-link">
