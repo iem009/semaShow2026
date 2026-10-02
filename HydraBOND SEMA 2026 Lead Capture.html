@@ -2,168 +2,327 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- CRITICAL MOBILE VIEWPORT: Disables user scaling to prevent annoying layout popping/zooming on phone input tap -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HydraBOND SEMA 2026 Lead Capture</title>
     
-    <!-- Apple / iOS Standalone Web App Meta Configuration -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="BHG Leads">
 
-    <!-- Tailwind CSS Script-Based Compilation Engine (v4 CDN) -->
+    <!-- Embedded Core Script Engines -->
     <script src="https://jsdelivr.net"></script>
-    <!-- HTML5-QRCode Scanner Library Engine CDN -->
-    <script src="https://unpkg.com"></script>
-    
+    <script src="https://cloudflare.com"></script>
+
     <style>
-        body { 
-            background-color: #0D0E12; 
-            color: #E4E4E7; 
-            /* Stops mobile drag-to-refresh swipe down gestures from resetting the code interface */
-            overscroll-behavior-y: contain; 
+        :root {
+            --bg-color: #0d0f14;
+            --panel-bg: #161920;
+            --border-color: #272b35;
+            --accent-color: #00d2ff;
+            --text-main: #f4f4f7;
+            --text-muted: #9ca3af;
+            --success-color: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overscroll-behavior-y: contain;
             -webkit-overflow-scrolling: touch;
         }
-        .accent-glow { box-shadow: 0 0 15px rgba(0, 210, 255, 0.15); }
-        .glass-panel { background-color: #161920; border: 1px solid #272B35; }
+
+        header {
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            color: #ffffff;
+        }
+
+        header p {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        #appMainArea {
+            flex: 1;
+            padding: 16px;
+            max-width: 440px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 180px; /* Increased to allow clear workspace spacing */
+            background-color: var(--bg-color);
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .counter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.08);
+        }
+
+        .counter-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .counter-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-top: 2px;
+        }
+
+        button {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #272b35;
+            color: #ffffff;
+            border: 1px solid #4b5563;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .panel-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+
+        .scanner-box {
+            background-color: #000000;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .hidden-cam-input {
+            display: none;
+        }
+
+        .cam-trigger-label {
+            display: block;
+            width: 100%;
+            background-color: var(--accent-color);
+            color: #0d0f14;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
+            text-align: center;
+        }
+
+        #scannerFeedback {
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        label {
+            display: block;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #ffffff;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-color);
+        }
+
+        input#formBarcode {
+            color: var(--accent-color);
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        /* NEW STICKY BUTTON CONTROL MODULE BAR STYLING */
+        .action-dock-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #161920;
+            border-top: 1px solid #272b35;
+            padding: 16px;
+            z-index: 200;
+            box-shadow: 0 -8px 24px rgba(0,0,0,0.5);
+            max-width: 440px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background-color: var(--success-color);
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-[#00D2FF] selection:text-[#0D0E12]">
+<body>
 
-    <!-- Fixed Core Mobile Responsive App Header Bar -->
-    <header class="glass-panel border-t-0 border-x-0 p-4 text-center sticky top-0 z-50 shadow-md">
-        <h1 class="text-base font-black tracking-wider text-white">BHG IMPORT EXPORT INC</h1>
-        <p class="text-[10px] font-bold tracking-widest text-[#00D2FF] uppercase mt-0.5">hydrabond.com • SEMA 2026</p>
+    <header>
+        <h1>BHG IMPORT EXPORT INC</h1>
+        <p>hydrabond.com • SEMA Show 2026</p>
     </header>
 
-    <!-- Main Container Layout: Scaled first for mobile phone frames and tablets -->
-    <main class="flex-1 p-4 max-w-md mx-auto w-full space-y-4 pb-28">
-        
-        <!-- Local Metrics Counter Block -->
-        <div class="glass-panel rounded-xl p-4 flex justify-between items-center accent-glow">
+    <div id="appMainArea">
+        <!-- Counter Summary -->
+        <div class="panel counter-row">
             <div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Leads Collected</p>
-                <p id="leadCount" class="text-3xl font-black text-white">0</p>
+                <div class="counter-label">Leads Saved</div>
+                <div id="leadCount" class="counter-value">0</div>
             </div>
-            <button onclick="exportToCSV()" class="bg-[#272B35] hover:bg-[#333845] border border-gray-600 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 active:scale-95 cursor-pointer">
-                📥 Export CSV
-            </button>
+            <button type="button" onclick="exportToCSV()" class="btn-secondary">📥 Export CSV</button>
         </div>
 
-        <!-- Hardware Camera Streaming Dashboard Layer -->
-        <div class="glass-panel rounded-xl p-4 space-y-3">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-[#00D2FF] flex items-center gap-2">
-                📷 Badge Scanner
-            </h2>
-            <div id="reader" class="bg-black rounded-lg border border-[#272B35] overflow-hidden"></div>
-            <div id="scannerFeedback" class="text-[11px] text-center text-gray-400 italic">Initializing phone camera matrix...</div>
+        <!-- Scanner Unit -->
+        <div class="panel">
+            <div class="panel-title">📷 Badge Scanner</div>
+            <div class="scanner-box">
+                <label for="nativeCamInput" class="cam-trigger-label">
+                    📸 Scan QR Code / Badge
+                </label>
+                <input type="file" accept="image/*" capture="environment" id="nativeCamInput" class="hidden-cam-input" onchange="processBadgePhoto(event)">
+                <div id="scannerFeedback">Ready. Click button to photograph Ignacio's badge.</div>
+            </div>
         </div>
 
-        <!-- Lead Capture Collection Target Form Structure -->
-        <form id="leadForm" class="glass-panel rounded-xl p-4 space-y-3" onsubmit="saveLead(event)">
-            <h2 class="text-xs font-bold tracking-wider uppercase text-gray-300">Shop / Distributor Info</h2>
+        <!-- Fields panel container block -->
+        <form id="leadForm" class="panel">
+            <div class="panel-title" style="color: #ffffff;">Shop / Distributor Info</div>
             
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Scanned Badge Data</label>
-                <input type="text" id="formBarcode" class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-xs text-[#00D2FF] font-mono focus:outline-none focus:border-[#00D2FF]" placeholder="Scan barcode or type manually">
+            <div class="form-group">
+                <label>Scanned Badge ID / Barcode Data</label>
+                <input type="text" id="formBarcode" placeholder="Data auto-populates after scanning">
             </div>
 
-            <div class="grid grid-cols-2 gap-2">
+            <div class="form-row form-group">
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Full Name *</label>
-                    <input type="text" id="formName" required class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#00D2FF]">
+                    <label>Full Name *</label>
+                    <input type="text" id="formName" required>
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Company *</label>
-                    <input type="text" id="formCompany" required class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#00D2FF]">
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-2">
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Email Addr</label>
-                    <input type="email" id="formEmail" class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#00D2FF]">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Phone Num</label>
-                    <input type="tel" id="formPhone" class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#00D2FF]">
+                    <label>Company *</label>
+                    <input type="text" id="formCompany" required>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Interest Level</label>
-                <select id="formInterest" class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00D2FF] font-semibold">
+            <div class="form-row form-group">
+                <div>
+                    <label>Email Address</label>
+                    <input type="email" id="formEmail">
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="tel" id="formPhone">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Interest Level</label>
+                <select id="formInterest">
                     <option value="Hot 🔥">Hot 🔥 (Ready to buy)</option>
                     <option value="Medium ⚡">Medium ⚡ (Interested)</option>
                     <option value="Cold ❄️">Cold ❄️ (General inquiry)</option>
                 </select>
             </div>
 
-            <div>
-                <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Booth Notes</label>
-                <textarea id="formNotes" rows="3" class="w-full bg-[#0D0E12] border border-[#272B35] rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00D2FF]" placeholder="Note mix requests, volume pricing inquiries, etc..."></textarea>
+            <div class="form-group">
+                <label>Booth Notes</label>
+                <textarea id="formNotes" rows="3" placeholder="Note custom mixes, configurations, pricing requests..."></textarea>
             </div>
-
-            <button type="submit" class="w-full bg-[#00D2FF] hover:bg-[#00b4dc] text-[#0D0E12] font-black py-3 rounded-lg text-xs tracking-widest uppercase transition mt-2 shadow-lg shadow-[#00d2ff2b] active:scale-[0.99] cursor-pointer">
-                Save Record
-            </button>
         </form>
-    </main>
+    </div>
 
-    <!-- Quick Navigation Links (Live Dashboard Subdomain Redirects) -->
-    <footer class="fixed bottom-0 left-0 right-0 glass-panel border-b-0 border-x-0 p-3 grid grid-cols-3 gap-2 text-center text-[10px] font-black uppercase tracking-wider">
-        <a href="https://hydrabond.com" target="_blank" class="py-2.5 bg-[#0D0E12] rounded-lg border border-[#272B35] text-gray-300 hover:text-white hover:border-[#00D2FF] transition flex flex-col justify-center items-center gap-0.5">
-            <span>🪄</span> <span>Advisor</span>
-        </a>
-        <a href="https://hydrabond.com" target="_blank" class="py-2.5 bg-[#0D0E12] rounded-lg border border-[#272B35] text-gray-300 hover:text-white hover:border-[#00D2FF] transition flex flex-col justify-center items-center gap-0.5">
-            <span>📦</span> <span>Wizard</span>
-        </a>
-        <a href="https://hydrabond.com" target="_blank" class="py-2.5 bg-[#0D0E12] rounded-lg border border-[#272B35] text-gray-300 hover:text-white hover:border-[#00D2FF] transition flex flex-col justify-center items-center gap-0.5">
-            <span>📊</span> <span>VOC Charts</span>
-        </a>
-    </footer>
+    <!-- NEW FIXED ACTION CONTROLS ENGINE BAR PANEL -->
+    <div class="action-dock-bar">
+        <button type="button" onclick="captureAndSaveLead(event)" class="btn-primary">
+            Save Lead Record
+        </button>
+    </div>
 
-    <!-- Core Pipeline JavaScript Engine Logic Block -->
     <script>
-        // Optional Configuration Target: Paste Google Web App Deployment URL string link inside empty quotes if streaming data directly to Google sheets
-        const GOOGLE_SCRIPT_URL = "";
-        let leads = JSON.parse(localStorage.getItem('sema_leads_2026')) || [];
-
-        function updateCounter() {
-            document.getElementById('leadCount').innerText = leads.length;
-        }
-
-        // Processing hardware scanner inputs instantly
-        function onScanSuccess(decodedText, decodedResult) {
-            document.getElementById('formBarcode').value = decodedText;
-            document.getElementById('scannerFeedback').innerText = "Last scanned token: " + decodedText;
-            
-            // Calls device mobile physical haptic response tracking engine on success match
-            if (navigator.vibrate) {
-                navigator.vibrate(120);
-            }
-        }
-
-        // Fire up browser native mobile camera viewfinder stream logic variables
-        let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-            fps: 15, 
-            qrbox: { width: 250, height: 150 },
-            rememberLastUsedCamera: true,
-            aspectRatio: 1.0
-        });
-        html5QrcodeScanner.render(onScanSuccess);
-        
-        setTimeout(() => {
-            document.getElementById('scannerFeedback').innerText = "System configuration live. Camera scanning online.";
-        }, 1500);
-
-        // Submitting leads safely 
-        function saveLead(e) {
-            e.preventDefault();
-            
-            const record = {
-                barcode: document.getElementById('formBarcode').value,
-                name: document.getElementById('formName').value,
-                company: document.getElementById('formCompany').value,
-                email: document.getElementById('formEmail').value,
-
